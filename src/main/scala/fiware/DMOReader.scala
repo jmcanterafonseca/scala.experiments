@@ -52,7 +52,7 @@ object DMOReader {
   }
 
   // prepares the DMO file by merging lines so that we can process in an easier way
-  def prepare_file(source:Source):Source {
+  def prepare_file(source:Source):Source = {
     for (line <- source.getLines) {
     }
 
