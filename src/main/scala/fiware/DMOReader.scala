@@ -29,19 +29,22 @@ object DMOReader {
     val file = new File("./src/test/resources" + File.separator + fileName)
 
     dmo_file_proccess(Source.fromFile(file.getCanonicalPath))
-
   }
 
   def dmo_file_proccess(source: Source) = {
     // Map with the data processed
 
     val data = new mutable.HashMap[String, Any]()
-    data += ("type" -> Vocabulary.EntityType)
-    data += ("measurementDevice" -> f_ngsi_value("Trimek CMM Spark Gage Plus"))
-    data += ("inspectingOrganization" -> f_ngsi_value("Trimek"))
-    data += ("reportPreparer" -> f_ngsi_value("Innovalia"))
+    f_property(data, "type", Vocabulary.EntityType)
+    f_property(data,Vocabulary.Device,
+      f_ngsi_value("Trimek CMM Spark Gauge Plus"))
+    f_property(data,Vocabulary.Org,f_ngsi_value("Trimek"))
+    f_property(data,Vocabulary.Prep,f_ngsi_value("Innovalia"))
 
-    for (line <- source.getLines) {
+    val linesCat = prepare_file(source)
+    println(linesCat.size)
+
+    for (line <- linesCat) {
       f_match(line, data)
     }
 
@@ -52,11 +55,24 @@ object DMOReader {
   }
 
   // prepares the DMO file by merging lines so that we can process in an easier way
-  def prepare_file(source:Source):Source = {
-    for (line <- source.getLines) {
+  def prepare_file(source:Source):mutable.ArrayBuffer[String] = {
+    var linesCat = new mutable.ArrayBuffer[String]
+    var concatLine:String = null
+
+    for(line <- source.getLines) {
+      if (line endsWith("$")) {
+        concatLine = line
+      }
+      else {
+        if (concatLine != null) {
+          linesCat += (concatLine.take(concatLine.length - 1) + line)
+          concatLine = null
+        }
+        else linesCat += line
+      }
     }
 
-    source
+    linesCat
   }
 
   /**
@@ -99,6 +115,10 @@ object DMOReader {
       map + ("metadata" -> metadata)
     }
     else map
+  }
+
+  def f_property(map:mutable.HashMap[String, Any],name:String,value:Any) = {
+    map +=(name -> value)
   }
 
 
