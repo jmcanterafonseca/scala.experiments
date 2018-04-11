@@ -19,7 +19,7 @@ object DMOReader {
   val filePattern = raw"FILNAM/'(.+)'".r
 
   // FA(Esfera_10)=FEAT/SPHERE,CART,74.8580,58.0652,3.7478,27.8511
-  val faPattern = raw"FA\((.+)\)=FEAT/(.+),(.+)".r
+  val faPattern = raw"FA\((.+)\)=FEAT/([A-Z,]+)([\+\-\\.\d,]+)".r
   val taPattern = raw"TA\((.+)\)=TOL/CORTOL,(.+),([\+\-\\.\d]+),([A-Z]+)".r
 
   val PrepAt = Vocabulary.PreparedAt
@@ -45,14 +45,14 @@ object DMOReader {
 
     files foreach (file => {
       println(s"Reading: ${file}")
-      val data = dmo_file_proccess(Source.fromFile(file.getCanonicalPath))
+      val data = dmo_file_process(Source.fromFile(file.getCanonicalPath))
 
       println(s"Writing to ${endpoint}")
       NgsiWriter.write(endpoint, data.toMap[String,Any])
     })
   }
 
-  def dmo_file_proccess(source: Source):mutable.HashMap[String,Any] = {
+  def dmo_file_process(source: Source):mutable.HashMap[String,Any] = {
     // Map with the data processed
     val data = new mutable.HashMap[String, Any]()
 
@@ -117,7 +117,11 @@ object DMOReader {
     }
 
     // FAs
-    case faPattern(featureName, featureType, faValue) => println(s"${featureName}, ${featureType}, ${faValue}")
+    case faPattern(featureName, featureType, faValue) => {
+      val valueList = faValue.split(",").map(x => x.toFloat).toList
+      map += (s"FA:${sanitize(featureName)}" -> f_ngsi_value(valueList,featureType.take(featureType.length - 1)))
+      println(s"${featureType}")
+    }
 
     case _ => Nil
   }
