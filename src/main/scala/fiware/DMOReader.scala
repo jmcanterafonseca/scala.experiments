@@ -24,22 +24,31 @@ object DMOReader {
 
   val PrepAt = Vocabulary.PreparedAt
 
-  def main(args: Array[String]): Unit = {
-    val fileName = args(0)
-    val file = new File("./src/test/resources" + File.separator + fileName)
-
-    dmo_file_proccess(Source.fromFile(file.getCanonicalPath))
+  def getListOfFiles(dir: String):List[File] = {
+    val d = new File(dir)
+    if (d.exists && d.isDirectory) {
+      d.listFiles.filter(_.isFile).toList
+    } else {
+      List[File]()
+    }
   }
 
-  def dmo_file_proccess(source: Source) = {
-    // Map with the data processed
+  def main(args: Array[String]): Unit = {
+    val directory = args(0)
+    val files = getListOfFiles(directory)
 
+    files foreach (file => {
+      val data = dmo_file_proccess(Source.fromFile(file.getCanonicalPath))
+      println(JsonSerializer.serialize(data.toMap[String,Any]))
+    })
+  }
+
+  def dmo_file_proccess(source: Source):mutable.HashMap[String,Any] = {
+    // Map with the data processed
     val data = new mutable.HashMap[String, Any]()
+
+    // f_property(data, "id", randomUUID().toString)
     f_property(data, "type", Vocabulary.EntityType)
-    f_property(data,Vocabulary.Device,
-      f_ngsi_value("Trimek CMM Spark Gauge Plus"))
-    f_property(data,Vocabulary.Org,f_ngsi_value("Trimek"))
-    f_property(data,Vocabulary.Prep,f_ngsi_value("Innovalia"))
 
     val linesCat = prepare_file(source)
     println(linesCat.size)
@@ -48,10 +57,7 @@ object DMOReader {
       f_match(line, data)
     }
 
-    // data.map((pair) => (pair._1, f_ser_json(pair._2)))
-
-    println(data("preparedAt"))
-    println(data)
+    data
   }
 
   // prepares the DMO file by merging lines so that we can process in an easier way
@@ -90,12 +96,15 @@ object DMOReader {
     case timePattern(timeStr) => map.update(PrepAt, f_ngsi_value(map(PrepAt) + s"T${timeStr}", "DateTime"))
 
     // File processed and automatically generated Id
-    case filePattern(fileName) => map += ("fileName" -> f_ngsi_value(s"${fileName}"))
+    case filePattern(fileName) => {
+      map += ("id" -> s"${fileName.replace(' ','_')}")
+      map += ("fileName" -> f_ngsi_value(s"${fileName}"))
+    }
 
     // TAs
     case taPattern(featureName,featureType,deviation,tolerance) => {
       val meta = Map("tolerance" -> f_ngsi_value(tolerance))
-      map += (s"TA:${featureName}" -> f_ngsi_value(deviation.toFloat,featureType,metadata = meta))
+      map += (s"TA:${sanitize(featureName)}" -> f_ngsi_value(deviation.toFloat,featureType,metadata = meta))
     }
 
     // FAs
@@ -121,10 +130,15 @@ object DMOReader {
     map +=(name -> value)
   }
 
-
-/*
-  def f_ser_json[T](v: T) = v match {
-    case _: String => s"${_}"
-    case _: Any    => v
-  } */
+  def sanitize(s:String):String = {
+    s.map(c => c match {
+        case 'á' => 'a'
+        case 'é' => 'e'
+        case 'í' => 'i'
+        case 'ó' => 'o'
+        case 'ú' => 'u'
+        case _ => c
+      }
+    )
+  }
 }
