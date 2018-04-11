@@ -34,12 +34,21 @@ object DMOReader {
   }
 
   def main(args: Array[String]): Unit = {
+    if(args.size <2) {
+      println("Usage: DMOReader <directory> <endpoint>")
+      System.exit(-1)
+    }
+
     val directory = args(0)
+    val endpoint = args(1)
     val files = getListOfFiles(directory)
 
     files foreach (file => {
+      println(s"Reading: ${file}")
       val data = dmo_file_proccess(Source.fromFile(file.getCanonicalPath))
-      println(JsonSerializer.serialize(data.toMap[String,Any]))
+
+      println(s"Writing to ${endpoint}")
+      NgsiWriter.write(endpoint, data.toMap[String,Any])
     })
   }
 
