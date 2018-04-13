@@ -7,17 +7,17 @@ import org.apache.http.impl.client.DefaultHttpClient
 
 object NgsiWriter {
 
-  def write(endpoint:String,map:Map[String,Any]) = {
+  def write(endpoint:String, map:Map[String,Any], tenant:String) = {
     val payload = Map("actionType" -> "append","entities" -> List(map))
     val json = JsonSerializer.serialize(payload)
 
     // create an HttpPost object
     val post = new HttpPost(endpoint + "/v2/op/update")
 
-    // set the Content-type
     post.setHeader("Content-type", "application/json")
 
-    println(json)
+    post.setHeader("Fiware-Service", tenant)
+
 
     // add the JSON as a StringEntity
     post.setEntity(new StringEntity(json))
