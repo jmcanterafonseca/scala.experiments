@@ -39,8 +39,8 @@
       <file leaf-file-name="DMOReader.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/fiware/DMOReader.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="497">
-              <caret line="124" column="89" selection-start-line="124" selection-start-column="89" selection-end-line="124" selection-end-column="89" />
+            <state relative-caret-position="539">
+              <caret line="125" column="5" lean-forward="true" selection-start-line="125" selection-start-column="5" selection-end-line="125" selection-end-column="5" />
               <folding>
                 <element signature="e#16#35#0" expanded="true" />
               </folding>
@@ -52,7 +52,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/scala/fiware/NgsiWriter.scala">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="289">
-              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
               <folding>
                 <element signature="e#16#62#0" expanded="true" />
               </folding>
@@ -283,9 +283,10 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$/build.sbt" value="265167444" />
+        <entry key="$PROJECT_DIR$/build.sbt" value="119222690" />
+        <entry key="$PROJECT_DIR$/project/assembly.sbt" value="2766693235" />
         <entry key="$PROJECT_DIR$/project/build.properties" value="2073824194" />
-        <entry key="$PROJECT_DIR$/project/plugins.sbt" value="0" />
+        <entry key="$PROJECT_DIR$/project/plugins.sbt" value="4036018646" />
       </map>
     </option>
   </component>
@@ -310,11 +311,11 @@
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.26853707" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.26853707" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24583334" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24583334" />
       <window_info anchor="bottom" id="sbt-shell-toolwindow" order="11" />
       <window_info anchor="bottom" id="Build" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -472,7 +473,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/scala/fiware/NgsiWriter.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
           <folding>
             <element signature="e#16#62#0" expanded="true" />
           </folding>
@@ -491,8 +492,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/fiware/DMOReader.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="124" column="89" selection-start-line="124" selection-start-column="89" selection-end-line="124" selection-end-column="89" />
+        <state relative-caret-position="539">
+          <caret line="125" column="5" lean-forward="true" selection-start-line="125" selection-start-column="5" selection-end-line="125" selection-end-column="5" />
           <folding>
             <element signature="e#16#35#0" expanded="true" />
           </folding>
