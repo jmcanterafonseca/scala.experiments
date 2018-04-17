@@ -53,9 +53,9 @@ object DMOReader {
     })
   }
 
-  def dmo_file_process(source: Source):mutable.HashMap[String,Any] = {
+  def dmo_file_process(source: Source):mutable.Map[String,Any] = {
     // Map with the data processed
-    val data = new mutable.HashMap[String, Any]()
+    val data:mutable.Map[String,Any] = mutable.HashMap()
 
     // f_property(data, "id", randomUUID().toString)
     f_property(data, "type", Vocabulary.EntityType)
@@ -100,7 +100,7 @@ object DMOReader {
     *
     *
     */
-  def f_match(str:String, map:mutable.HashMap[String,Any]) =  str match {
+  def f_match(str:String, map:mutable.Map[String,Any]) =  str match {
     // Date and Time
     case datePattern(year,month,day) => map += (PrepAt -> s"${year}-${month}-${day}")
     case timePattern(timeStr) => map.update(PrepAt, f_ngsi_value(map(PrepAt) + s"T${timeStr}", "DateTime"))
@@ -113,15 +113,16 @@ object DMOReader {
 
     // TAs
     case taPattern(featureName,featureType,deviation,tolerance) => {
-      val meta = Map("tolerance" -> f_ngsi_value(tolerance))
-      map += (s"TA:${sanitize(featureName)}" -> f_ngsi_value(deviation.toFloat,featureType,metadata = meta))
+      var meta = Map("tolerance" -> f_ngsi_value(tolerance))
+      meta += ("parameter" -> f_ngsi_value(featureType))
+      map += (s"TA-${sanitize(featureName)}" -> f_ngsi_value(deviation.toFloat,metadata = meta))
     }
 
     // FAs
     case faPattern(featureName, featureType, faValue) => {
+      val meta = Map("featureType" -> f_ngsi_value(featureType.take(featureType.length - 1)))
       val valueList = faValue.split(",").map(x => x.toFloat).toList
-      map += (s"FA:${sanitize(featureName)}" -> f_ngsi_value(valueList,featureType.take(featureType.length - 1)))
-      println(s"${featureType}")
+      map += (s"FA-${sanitize(featureName)}" -> f_ngsi_value(valueList, metadata = meta))
     }
 
     case _ => Nil
@@ -140,7 +141,7 @@ object DMOReader {
     else map
   }
 
-  def f_property(map:mutable.HashMap[String, Any],name:String,value:Any) = {
+  def f_property(map:mutable.Map[String, Any],name:String,value:Any) = {
     map +=(name -> value)
   }
 
