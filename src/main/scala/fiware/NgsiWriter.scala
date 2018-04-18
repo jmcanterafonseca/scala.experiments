@@ -23,9 +23,7 @@ object NgsiWriter {
     post.setEntity(new StringEntity(json))
 
     // send the post request
-    val response = (new DefaultHttpClient).execute(post)
-
-    println(response.getStatusLine.getStatusCode)
+    (new DefaultHttpClient).execute(post).getStatusLine.getStatusCode
   }
 
 }

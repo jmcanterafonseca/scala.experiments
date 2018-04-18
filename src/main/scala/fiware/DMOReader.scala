@@ -1,6 +1,7 @@
 package fiware
 
-import java.io.File
+import java.io.{File, FileWriter, PrintWriter}
+
 import scala.collection.mutable
 import scala.io.Source
 
@@ -23,6 +24,13 @@ object DMOReader {
   val taPattern = raw"TA\((.+)\)=TOL/CORTOL,(.+),([\+\-\\.\d]+),([A-Z]+)".r
 
   val PrepAt = Vocabulary.PreparedAt
+
+  var log:PrintWriter = null
+
+  def writer(fileName:String) = {
+      val file = new File(fileName)
+      new PrintWriter(new FileWriter(file))
+  }
 
   def getListOfFiles(dir: String):List[File] = {
     val d = new File(dir)
@@ -49,11 +57,20 @@ object DMOReader {
 
     val files = getListOfFiles(directory)
 
+    if (files.size == 0) {
+      println(s"File or directory does not exist: ${directory}")
+      System.exit(-1)
+    }
+
     files foreach (file => {
       println(s"Reading: ${file}")
+      log = writer(s"${file.getName}.log")
       val data = dmo_file_process(Source.fromFile(file.getCanonicalPath))
 
-      NgsiWriter.write(endpoint, data.toMap[String,Any], tenant)
+      log.println(NgsiWriter.write(endpoint, data.toMap[String,Any], tenant))
+
+      log.flush()
+      log.close()
     })
   }
 
@@ -65,7 +82,6 @@ object DMOReader {
     f_property(data, "type", Vocabulary.EntityType)
 
     val linesCat = prepare_file(source)
-    println(linesCat.size)
 
     for (line <- linesCat) {
       f_match(line, data)
