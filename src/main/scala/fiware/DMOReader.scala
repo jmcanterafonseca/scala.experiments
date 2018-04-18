@@ -16,7 +16,7 @@ import scala.io.Source
 object DMOReader {
   val datePattern = raw"DATE=(\d{4})/(\d{2})/(\d{2})".r
   val timePattern = raw"TIME=(.*)".r
-  val filePattern = raw"FILNAM/'(.+)'".r
+  val filePattern = raw"FILNAM/'(.+)_(.+)\.dmo'".r
 
   // FA(Esfera_10)=FEAT/SPHERE,CART,74.8580,58.0652,3.7478,27.8511
   val faPattern = raw"FA\((.+)\)=FEAT/([A-Z,]+)([\+\-\\.\d,]+)".r
@@ -106,9 +106,13 @@ object DMOReader {
     case timePattern(timeStr) => map.update(PrepAt, f_ngsi_value(map(PrepAt) + s"T${timeStr}", "DateTime"))
 
     // File processed and automatically generated Id
-    case filePattern(fileName) => {
-      map += ("id" -> s"${fileName.replace(' ','_')}")
-      map += ("fileName" -> f_ngsi_value(s"${fileName}"))
+    case filePattern(partName,partId) => {
+      val normPartName = partName.replace(' ', '_')
+      val normPartId = partId.replace(' ','_')
+      map += ("id" -> s"Measurement_${normPartName}")
+      map += ("fileName" -> f_ngsi_value(s"${normPartName}${normPartId}"))
+      map += ("currentPartId" ->  f_ngsi_value(s"${normPartId}"))
+      map += ("partType" -> f_ngsi_value(s"${partName}"))
     }
 
     // TAs
@@ -152,6 +156,7 @@ object DMOReader {
         case 'í' => 'i'
         case 'ó' => 'o'
         case 'ú' => 'u'
+        case '-' => '_'
         case _ => c
       }
     )
