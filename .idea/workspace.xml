@@ -39,8 +39,8 @@
       <file leaf-file-name="DMOReader.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/fiware/DMOReader.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="108" column="17" lean-forward="true" selection-start-line="108" selection-start-column="17" selection-end-line="108" selection-end-column="17" />
+            <state relative-caret-position="844">
+              <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
               <folding>
                 <element signature="e#16#35#0" expanded="true" />
               </folding>
@@ -193,8 +193,8 @@
     <configuration name="DMOReader" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="fiware.DMOReader" />
       <module name="dmo_ngsi" />
-      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/src/test/resources http://localhost:1030 t_measurement" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/src/test/resources/Example2.dmo http://localhost:1030 t_measurement" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/" />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -492,8 +492,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/fiware/DMOReader.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="108" column="17" lean-forward="true" selection-start-line="108" selection-start-column="17" selection-end-line="108" selection-end-column="17" />
+        <state relative-caret-position="844">
+          <caret line="54" lean-forward="true" selection-start-line="54" selection-end-line="54" />
           <folding>
             <element signature="e#16#35#0" expanded="true" />
           </folding>

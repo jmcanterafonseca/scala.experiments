@@ -28,27 +28,31 @@ object DMOReader {
     val d = new File(dir)
     if (d.exists && d.isDirectory) {
       d.listFiles.filter(_.isFile).toList
-    } else {
+    } else if (d.exists) {
+      List(d)
+    }
+    else {
       List[File]()
     }
   }
 
   def main(args: Array[String]): Unit = {
     if(args.size <3) {
-      println("Usage: DMOReader <directory> <endpoint> <tenant>")
+      println("Usage: DMOReader <directory or file> <endpoint> <tenant>")
       System.exit(-1)
     }
 
+    // It can be directory or file
     val directory = args(0)
     val endpoint = args(1)
     val tenant = args(2)
+
     val files = getListOfFiles(directory)
 
     files foreach (file => {
       println(s"Reading: ${file}")
       val data = dmo_file_process(Source.fromFile(file.getCanonicalPath))
 
-      println(s"Writing to ${endpoint}")
       NgsiWriter.write(endpoint, data.toMap[String,Any], tenant)
     })
   }
