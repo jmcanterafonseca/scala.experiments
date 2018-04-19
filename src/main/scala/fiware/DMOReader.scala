@@ -1,6 +1,7 @@
 package fiware
 
 import java.io.{File, FileWriter, PrintWriter}
+import java.util.UUID
 
 import scala.collection.mutable
 import scala.io.Source
@@ -78,7 +79,6 @@ object DMOReader {
     // Map with the data processed
     val data:mutable.Map[String,Any] = mutable.HashMap()
 
-    // f_property(data, "id", randomUUID().toString)
     f_property(data, "type", Vocabulary.EntityType)
 
     val linesCat = prepare_file(source)
@@ -130,6 +130,8 @@ object DMOReader {
       val normPartName = partName.replace(' ', '_')
       val normPartId = partId.replace(' ','_')
       map += ("id" -> s"Measurement_${normPartName}")
+      // map += ( "id" -> UUID.randomUUID().toString)
+
       map += ("fileName" -> f_ngsi_value(s"${normPartName}${normPartId}"))
       map += ("currentPartId" ->  f_ngsi_value(s"${normPartId}"))
       map += ("partType" -> f_ngsi_value(s"${partName}"))
@@ -139,7 +141,12 @@ object DMOReader {
     case taPattern(featureName,featureType,deviation,tolerance) => {
       var meta = Map("tolerance" -> f_ngsi_value(tolerance))
       meta += ("parameter" -> f_ngsi_value(featureType))
-      map += (s"TA@${sanitize(featureName)}" -> f_ngsi_value(deviation.toFloat,metadata = meta))
+      // We avoid integer values due to conversion made by Orion that Crate does not like
+      var deviation_val = deviation
+      if ((deviation indexOf('.')) == -1) {
+        deviation_val = s"${deviation}.00000000001"
+      }
+      map += (s"TA@${sanitize(featureName)}" -> f_ngsi_value(deviation_val.toFloat,metadata = meta))
     }
 
     // FAs
