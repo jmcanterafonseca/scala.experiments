@@ -150,11 +150,12 @@ object DMOReader {
     }
 
     // FAs
+    /*
     case faPattern(featureName, featureType, faValue) => {
       val meta = Map("featureType" -> f_ngsi_value(featureType.take(featureType.length - 1)))
       val valueList = faValue.split(",").map(x => x.toFloat).toList
       map += (s"FA@${sanitize(featureName)}" -> f_ngsi_value(valueList, metadata = meta))
-    }
+    } */
 
     case _ => Nil
   }
