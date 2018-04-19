@@ -144,7 +144,7 @@ object DMOReader {
       // We avoid integer values due to conversion made by Orion that Crate does not like
       var deviation_val = deviation
       if ((deviation indexOf('.')) == -1) {
-        deviation_val = s"${deviation}.00000000001"
+        deviation_val = s"${deviation}.00001"
       }
       map += (s"TA@${sanitize(featureName)}" -> f_ngsi_value(deviation_val.toFloat,metadata = meta))
     }
